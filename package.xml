@@ -8,6 +8,9 @@
   <maintainer email="mauro.martini@polito.it">Mauro Martini</maintainer>
   <license>MIT</license>
   <depend>people_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>nav2_costmap_2d</depend>
+  <depend>pluginlib</depend>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

@@ -19,7 +19,7 @@ In our case, the ProxemicsLayer and the PassingLayer have been joined in a singl
 
 ## Published Topic
 
-- *(global or local)_costmap/social_grid [nav_msgs/OccupancyGrid]. Occupancy grid with the social costs employed. Only active if parameters   
+- *(global or local)_costmap/social_grid [nav_msgs/OccupancyGrid]. Occupancy grid with the social costs employed. Only active if parameter `publish_occgrid` is True.   
 
 ## Parameter configuration
 
