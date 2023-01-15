@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>nav2_social_costmap_plugin</name>
+  <version>0.0.0</version>
+  <description>Plugin-based layer for social navigation in the Navigation2 system of ROS2</description>
+  <maintainer email="noeperez@upo.es">Noé Pérez-Higueras</maintainer>
+  <maintainer email="mauro.martini@polito.it">Mauro Martini</maintainer>
+  <license>MIT</license>
+  <depend>people_msgs</depend>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
