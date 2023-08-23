@@ -27,10 +27,10 @@ void SocialLayer::onInitialize() {
   current_ = true;
   // START Subscription to topic
   {
-  auto node_shared_ptr = node_.lock();
+    auto node_shared_ptr = node_.lock();
     ppl_sub_ = node_shared_ptr->create_subscription<people_msgs::msg::People>(
-      "/people", rclcpp::SensorDataQoS(),
-      std::bind(&SocialLayer::peopleCallback, this, std::placeholders::_1));
+        "/people", rclcpp::SensorDataQoS(),
+        std::bind(&SocialLayer::peopleCallback, this, std::placeholders::_1));
   }
 
   RCLCPP_INFO(logger_,
@@ -197,7 +197,7 @@ void SocialLayer::updateBounds(double origin_x, double origin_y,
 }
 
 void SocialLayer::updateCosts(nav2_costmap_2d::Costmap2D &master_grid,
-                          int min_i, int min_j, int max_i, int max_j) {
+                              int min_i, int min_j, int max_i, int max_j) {
   if (!enabled_) {
     return;
   }
