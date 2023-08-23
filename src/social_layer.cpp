@@ -23,6 +23,8 @@ namespace nav2_social_costmap_plugin {
 // This method is called at the end of plugin initialization.
 // It contains ROS parameter(s) declaration and subscription to topics
 void SocialLayer::onInitialize() {
+  
+  current_ = true;
   // START Subscription to topic
   {
     auto node_shared_ptr = node_.lock();
