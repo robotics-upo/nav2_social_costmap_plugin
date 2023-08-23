@@ -10,7 +10,7 @@
 #include "std_msgs/msg/string.hpp"
 #include <angles/angles.h>
 #include <math.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 // END INCLUDES from socialLayer
 
 #include "nav2_costmap_2d/costmap_math.hpp"
@@ -24,11 +24,14 @@ namespace nav2_social_costmap_plugin {
 // It contains ROS parameter(s) declaration and subscription to topics
 void SocialLayer::onInitialize() {
   // START Subscription to topic
-  ppl_sub_ = node_->create_subscription<people_msgs::msg::People>(
-      "/people", rclcpp::SensorDataQoS(),
-      std::bind(&SocialLayer::peopleCallback, this, std::placeholders::_1));
+  {
+    auto node_shared_ptr = node_.lock();
+    ppl_sub_ = node_shared_ptr->create_subscription<people_msgs::msg::People>(
+        "/people", rclcpp::SensorDataQoS(),
+        std::bind(&SocialLayer::peopleCallback, this, std::placeholders::_1));
+  }
 
-  RCLCPP_INFO(node_->get_logger(),
+  RCLCPP_INFO(logger_,
               "SocialLayer: subscribed to "
               "topic %s",
               ppl_sub_->get_topic_name());
@@ -65,34 +68,36 @@ void SocialLayer::onInitialize() {
   tolerance_vel_still_ = 0.1;
 
   if (publish_occgrid_) {
+    auto node_shared_ptr = node_.lock();
     grid_pub_ =
-        node_->create_publisher<nav_msgs::msg::OccupancyGrid>("social_grid", 1);
+        node_shared_ptr->create_publisher<nav_msgs::msg::OccupancyGrid>("social_grid", 1);
     grid_pub_->on_activate();
   }
 }
 
 void SocialLayer::get_parameters() {
-  node_->get_parameter(name_ + "." + "enabled", enabled_);
-  node_->get_parameter(name_ + "." + "cutoff", cutoff_);
-  node_->get_parameter(name_ + "." + "amplitude", amplitude_);
-  node_->get_parameter(name_ + "." + "covariance_front_height",
+  auto node_shared_ptr = node_.lock();
+  node_shared_ptr->get_parameter(name_ + "." + "enabled", enabled_);
+  node_shared_ptr->get_parameter(name_ + "." + "cutoff", cutoff_);
+  node_shared_ptr->get_parameter(name_ + "." + "amplitude", amplitude_);
+  node_shared_ptr->get_parameter(name_ + "." + "covariance_front_height",
                        sigma_front_height_);
-  node_->get_parameter(name_ + "." + "covariance_front_width",
+  node_shared_ptr->get_parameter(name_ + "." + "covariance_front_width",
                        sigma_front_width_);
-  node_->get_parameter(name_ + "." + "covariance_rear_height",
+  node_shared_ptr->get_parameter(name_ + "." + "covariance_rear_height",
                        sigma_rear_height_);
-  node_->get_parameter(name_ + "." + "covariance_rear_width",
+  node_shared_ptr->get_parameter(name_ + "." + "covariance_rear_width",
                        sigma_rear_width_);
-  node_->get_parameter(name_ + "." + "covariance_right_height",
+  node_shared_ptr->get_parameter(name_ + "." + "covariance_right_height",
                        sigma_right_height_);
-  node_->get_parameter(name_ + "." + "covariance_right_width",
+  node_shared_ptr->get_parameter(name_ + "." + "covariance_right_width",
                        sigma_right_width_);
-  node_->get_parameter(name_ + "." + "covariance_when_still",
+  node_shared_ptr->get_parameter(name_ + "." + "covariance_when_still",
                        sigma_when_still_);
-  node_->get_parameter(name_ + "." + "use_passing", use_passing_);
-  node_->get_parameter(name_ + "." + "use_vel_factor", use_vel_factor_);
-  node_->get_parameter(name_ + "." + "speed_factor_multiplier", speed_factor_);
-  node_->get_parameter(name_ + "." + "publish_occgrid", publish_occgrid_);
+  node_shared_ptr->get_parameter(name_ + "." + "use_passing", use_passing_);
+  node_shared_ptr->get_parameter(name_ + "." + "use_vel_factor", use_vel_factor_);
+  node_shared_ptr->get_parameter(name_ + "." + "speed_factor_multiplier", speed_factor_);
+  node_shared_ptr->get_parameter(name_ + "." + "publish_occgrid", publish_occgrid_);
 }
 
 void SocialLayer::peopleCallback(
@@ -125,7 +130,7 @@ void SocialLayer::updateBounds(double origin_x, double origin_y,
 
     if (!tf_->canTransform(pt.header.frame_id, global_frame,
                            tf2_ros::fromMsg(pt.header.stamp))) {
-      RCLCPP_INFO(node_->get_logger(),
+      RCLCPP_INFO(logger_,
                   "Social layer can't transform from %s to %s",
                   pt.header.frame_id.c_str(), global_frame.c_str());
       return;
@@ -207,7 +212,7 @@ void SocialLayer::updateCosts(nav2_costmap_2d::Costmap2D &master_grid,
   double res = costmap->getResolution();
 
   nav_msgs::msg::OccupancyGrid grid;
-  grid.header.stamp = node_->get_clock()->now();
+  grid.header.stamp = clock_->now();
   grid.header.frame_id = layered_costmap_->getGlobalFrameID();
   // grid.info.map_load_time
   grid.info.height = costmap->getSizeInCellsY();
