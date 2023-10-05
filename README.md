@@ -1,6 +1,6 @@
 # Nav2 social costmap plugin
 
-Plugin-based layer for social navigation in the Nav2 system of ROS2 (tested in ROS2 Humble Distro).
+Plugin-based layer for social navigation in the Nav2 system of ROS2 (tested in ROS2 Foxy Distro).
 
 It is based on the outdated [social_navigation_layers](http://wiki.ros.org/social_navigation_layers) package of ROS1 Melodic.
 In our case, the ProxemicsLayer and the PassingLayer have been joined in a single layer. 
