@@ -432,10 +432,10 @@ namespace nav2_social_costmap_plugin
     if (publish_occgrid_)
       grid_pub_->publish(grid);
 
-    // I had to add this in Humble because nobody
-    // is setting this to true, so the controller_server
+    // I had to add this because nobody is setting this
+    // to true in Humble for some reason, so the controller_server
     // get stuck in an infinite loop waiting for the layers
-    // are current
+    // to be current
     current_ = true;
   }
 
